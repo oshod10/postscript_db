@@ -108,10 +108,20 @@ end if;
       DBMS_OUTPUT.put_line ('No updates done to DMS01 server records!');
    END IF;
    
-   IF iDM01 is not null
+   IF iDM01 is not null and iDM02 is null
    then
    update params 
-   set param_value_1 = iDM01, param_value_2 = iDM02 
+   set param_value_1 = iDM01, param_value_2 = iDM01 
+   where param_family = 'AR'
+   and param_name like 'FtpConnectionDeta%';
+   if sql%rowcount > 0 
+   then 
+   DBMS_output.put_line ('Param for AR family updated to use new DMS server!');
+   else 
+   dbms_output.put_line('Param for AR family could not be updated!');
+   end if;
+   update params 
+   set param_value_1 = iDM01, param_value_2 = iDM02
    where param_family = 'AR'
    and param_name like 'FtpConnectionDeta%';
    if sql%rowcount > 0 
