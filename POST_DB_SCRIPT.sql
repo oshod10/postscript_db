@@ -74,8 +74,8 @@ where EXTERN_VALUES_ID = vExtern and env_number = vEnv;
 if sql%rowcount = 0 
 then 
 insert into EXTERN_VALUES_PER_ENV (env_number, extern_values_id, extern_values_value)values (vEnv, vExtern, '/Capita.TfL.SMS.SendSMSToSingleRecipient/SendSMSToSingleRecipientService.svc') ;
-dbms_output.put_line ('EV for Capita_remote_system_params, custom_type 7 has been updated!');
 end if;
+dbms_output.put_line ('EV for Capita_remote_system_params, custom_type 7 has been updated!');
 
 
    /* Update servers table records */
@@ -275,7 +275,7 @@ end if;
     if vold_DB_val <> iDB
     then 
        UPDATE params
-       SET param_value_1 =  REPLACE (REPLACE (param_value_1, vold_DB_val, iDB),'SID','SERVCIE_NAME')
+       SET param_value_1 =  REPLACE (REPLACE (param_value_1, vold_DB_val, iDB),'SID','SERVICE_NAME')
        WHERE param_family LIKE 'ODBC'
        AND (param_name LIKE 'ODBCOracleServerName' OR param_name LIKE 'ODBCOracleProvider') and cluster_id iS not null;
        if sql%rowcount > 0 
@@ -285,7 +285,6 @@ end if;
     DBMS_OUTPUT.put_line('ODBC params could not be updated!');
     end if; 
     
-    DBMS_OUTPUT.put_line('No changes made to ODBC params family!');
    end if;
    
    
