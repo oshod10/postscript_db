@@ -298,35 +298,38 @@ dbms_output.put_line ('EV for Capita_remote_system_params, custom_type 7 has bee
 
    SELECT MAX (server_id) INTO vmax FROM usage.dr_ftp_sources;
 
-   IF  iDM02 is null and vcount = 2  /* data is copied from full scale to reduced scale assuming that iDM01 cannot be null */
-   THEN
+   If iDM01 is not null 
+    then 
+     IF  iDM02 is null and vcount = 2  /* data is copied from full scale to reduced scale assuming that iDM01 cannot be null */
+      THEN
       UPDATE usage.dr_ftp_sources
        SET server_name = iDM01
        WHERE server_id < vmax;
       delete from usage.dr_ftp_sources where server_id = vmax;   
    
-   ELSIF iDM02 is not null and vcount = 1  /* data is copied from reduced scale to full scale */
-   THEN
+      ELSIF iDM02 is not null and vcount = 1  /* data is copied from reduced scale to full scale */
+       THEN
       vmax := vmax + 1;
       INSERT INTO usage.dr_ftp_sources (server_id, server_name, use_ftp, description) VALUES (vmax, iDM02, 0, 'ftp');
       UPDATE usage.dr_ftp_sources
       SET server_name = iDM01
       WHERE server_id < vmax;
 	   
-   ELSIF vcount = 1 and iDM02 is null /* data is copied from reduced scale to reduced scale */
-   then 
+      ELSIF vcount = 1 and iDM02 is null /* data is copied from reduced scale to reduced scale */
+       then 
       UPDATE usage.dr_ftp_sources
       SET server_name = iDM01
       WHERE server_id = vmax;
    
-   ELSIF iDM02 is not null and vcount = 2  /* data is copied from full scale to full scale */
-   THEN
+      ELSIF iDM02 is not null and vcount = 2  /* data is copied from full scale to full scale */
+       THEN
       update usage.dr_ftp_sources 
 	  set server_name = iDM01 where server_id < vmax;
 	  update usage.dr_ftp_sources 
 	  set server_name = iDM02 where server_id = vmax;
    dbms_output.put_line ('values changed in usage.DR_FTP_SOURCES!');
    END IF;
+   end if;
       
    
    UPDATE usage.dr_ftp_sources
